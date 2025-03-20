@@ -1,4 +1,5 @@
 import { useState } from "react";
+import "/src/index.css"; // Import the CSS file
 
 const Index = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -7,7 +8,8 @@ const Index = () => {
 
   return (
     <>
-      <nav className="bg-white border-b border-gray-100 sticky top-0 z-40">
+      <div className="background-image"></div> {/* Add this div */}
+      <nav className="sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16">
             {/* Logo section */}
@@ -155,7 +157,6 @@ const Index = () => {
           </div>
         )}
       </nav>
-
       {/* Sign up Modal */}
       {showSignupModal && (
         <div className="fixed inset-0 z-50 overflow-y-auto">
@@ -311,7 +312,6 @@ const Index = () => {
           </div>
         </div>
       )}
-
       {/* Sign in Modal */}
       {showSigninModal && (
         <div className="fixed inset-0 z-50 overflow-y-auto">
@@ -474,6 +474,16 @@ const Index = () => {
           </div>
         </div>
       )}
+      <div className="flex items-center justify-center mt-60">
+        <div className="text-center bg-opacity-80 p-10 rounded-lg shadow-lg">
+          <p className="text-2xl font-semibold text-gray-800 mb-4">
+            What will you design today?
+          </p>
+          <button className="mt-4 px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-500 text-white text-lg font-medium rounded-lg shadow-md hover:from-purple-700 hover:to-blue-600 transition-transform transform hover:-translate-y-1">
+            Create Design
+          </button>
+        </div>
+      </div>
     </>
   );
 };
