@@ -1,7 +1,31 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
+  const navigate = useNavigate();
   const [show, setShow] = useState(false);
+
+  const [customValue, setCustomValue] = useState({
+    width: "",
+    height: "",
+  });
+
+  const handleChange = (e) => {
+    const { type, name, value } = e.target;
+    const updatedValue = type === "number" ? Number(value) : value;
+
+    setCustomValue({ ...customValue, [name]: updatedValue });
+  };
+
+  const handleSubmit = () => {
+    navigate("/design/create", {
+      state: {
+        type: "create",
+        width: customValue.width,
+        height: customValue.height,
+      },
+    });
+  };
 
   return (
     <div className="border border-gray-700 rounded-lg p-3 sm:p-5 bg-[#3a464a] text-white shadow-lg">
@@ -50,6 +74,8 @@ const Home = () => {
               <input
                 type="number"
                 name="width"
+                value={customValue.width}
+                onChange={handleChange}
                 placeholder="1920"
                 className="outline-none w-full px-2 sm:px-3 py-1.5 sm:py-2 border border-[#4d4d4d] bg-[#1a1a1a] rounded-md focus:border-purple-500 transition-colors duration-200 text-sm"
               />
@@ -64,12 +90,17 @@ const Home = () => {
               <input
                 type="number"
                 name="height"
+                value={customValue.height}
+                onChange={handleChange}
                 placeholder="1080"
                 className="outline-none w-full px-2 sm:px-3 py-1.5 sm:py-2 border border-[#4d4d4d] bg-[#1a1a1a] rounded-md focus:border-purple-500 transition-colors duration-200 text-sm"
               />
             </div>
           </div>
-          <button className="w-full px-3 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm overflow-hidden text-center bg-gradient-to-r from-purple-600 to-blue-500 text-white rounded-md font-medium hover:from-purple-700 hover:to-blue-600 transition-all duration-300 shadow-md">
+          <button
+            onClick={handleSubmit}
+            className="w-full px-3 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm overflow-hidden text-center bg-gradient-to-r from-purple-600 to-blue-500 text-white rounded-md font-medium hover:from-purple-700 hover:to-blue-600 transition-all duration-300 shadow-md"
+          >
             Create Design
           </button>
         </div>
