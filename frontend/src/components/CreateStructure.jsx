@@ -83,6 +83,7 @@ const CreateStructure = ({ info, currentComponent, removeComponent }) => {
         }}
         className="absolute group hover:border hover:border-indigo-500"
       >
+        <Element id={randomValue} info={info} exId={`${randomValue}c`} />
         <div
           id={`${randomValue}c`}
           className="rounded-full"
@@ -119,8 +120,9 @@ const CreateStructure = ({ info, currentComponent, removeComponent }) => {
         }}
         className="absolute group hover:border hover:border-indigo-500"
       >
+        <Element id={randomValue} info={info} exId={`${randomValue}t`} />
         <div
-          id={`${randomValue}c`}
+          id={`${randomValue}t`}
           style={{
             width: info.width + "px",
             height: info.height + "px",
@@ -155,8 +157,9 @@ const CreateStructure = ({ info, currentComponent, removeComponent }) => {
         }}
         className="absolute group hover:border hover:border-indigo-500"
       >
+        <Element id={randomValue} info={info} exId={`${randomValue}p`} />
         <div
-          id={`${randomValue}c`}
+          id={`${randomValue}p`}
           style={{
             width: info.width + "px",
             height: info.width + "px",
@@ -177,7 +180,7 @@ const CreateStructure = ({ info, currentComponent, removeComponent }) => {
     );
   }
 
-  // pentagon shape
+  // house shape
   if (info.name === "shape" && info.type === "house") {
     html = (
       <div
@@ -191,8 +194,9 @@ const CreateStructure = ({ info, currentComponent, removeComponent }) => {
         }}
         className="absolute group hover:border hover:border-indigo-500"
       >
+        <Element id={randomValue} info={info} exId={`${randomValue}h`} />
         <div
-          id={`${randomValue}c`}
+          id={`${randomValue}h`}
           style={{
             width: info.width + "px",
             height: info.width + "px",
@@ -228,8 +232,9 @@ const CreateStructure = ({ info, currentComponent, removeComponent }) => {
         }}
         className="absolute group hover:border hover:border-indigo-500"
       >
+        <Element id={randomValue} info={info} exId={`${randomValue}r`} />
         <div
-          id={`${randomValue}c`}
+          id={`${randomValue}r`}
           style={{
             width: info.width + "px",
             height: info.width + "px",
@@ -257,6 +262,10 @@ const CreateStructure = ({ info, currentComponent, removeComponent }) => {
         id={randomValue}
         onClick={() => info.setCurrentComponent(info)}
         style={{
+          width: info.width + "px",
+          height: info.height + "px",
+          background: info.color,
+          opacity: info.opacity,
           left: info.left + "px",
           top: info.top + "px",
           zIndex: info.z_index,
@@ -264,16 +273,8 @@ const CreateStructure = ({ info, currentComponent, removeComponent }) => {
         }}
         className="absolute group hover:border hover:border-indigo-500"
       >
-        <div
-          id={`${randomValue}c`}
-          className="rounded-xl"
-          style={{
-            width: info.height + "px",
-            height: info.height + "px",
-            background: info.color,
-            opacity: info.opacity,
-          }}
-        ></div>
+        <Element id={randomValue} info={info} exId="" />
+
         {currentComponent.id === info.id && (
           <div
             onClick={() => removeComponent(info.id)}
@@ -293,23 +294,18 @@ const CreateStructure = ({ info, currentComponent, removeComponent }) => {
         id={randomValue}
         onClick={() => info.setCurrentComponent(info)}
         style={{
+          width: info.height + "px",
+          height: info.height + "px",
+          background: info.color,
+          opacity: info.opacity,
           left: info.left + "px",
           top: info.top + "px",
           zIndex: info.z_index,
           transform: info.rotate ? `rotate(${info.rotate}deg)` : `rotate(0deg)`,
         }}
-        className="absolute group hover:border hover:border-indigo-500"
+        className="absolute group hover:border hover:border-indigo-500 rounded-t-full"
       >
-        <div
-          id={`${randomValue}c`}
-          className="rounded-t-full"
-          style={{
-            width: info.width + "px",
-            height: info.width + "px",
-            background: info.color,
-            opacity: info.opacity,
-          }}
-        ></div>
+        <Element id={randomValue} info={info} exId="" />
         {currentComponent.id === info.id && (
           <div
             onClick={() => removeComponent(info.id)}
@@ -329,23 +325,19 @@ const CreateStructure = ({ info, currentComponent, removeComponent }) => {
         id={randomValue}
         onClick={() => info.setCurrentComponent(info)}
         style={{
+          width: info.height + "px",
+          height: info.height + "px",
+          background: info.color,
+          opacity: info.opacity,
           left: info.left + "px",
           top: info.top + "px",
           zIndex: info.z_index,
           transform: info.rotate ? `rotate(${info.rotate}deg)` : `rotate(0deg)`,
         }}
-        className="absolute group hover:border hover:border-indigo-500"
+        className="absolute group hover:border hover:border-indigo-500 rounded-tl-4xl rounded-br-4xl"
       >
-        <div
-          id={`${randomValue}c`}
-          className="rounded-tl-4xl rounded-br-4xl"
-          style={{
-            width: info.height + "px",
-            height: info.height + "px",
-            background: info.color,
-            opacity: info.opacity,
-          }}
-        ></div>
+        <Element id={randomValue} info={info} exId="" />
+
         {currentComponent.id === info.id && (
           <div
             onClick={() => removeComponent(info.id)}
@@ -365,23 +357,19 @@ const CreateStructure = ({ info, currentComponent, removeComponent }) => {
         id={randomValue}
         onClick={() => info.setCurrentComponent(info)}
         style={{
+          width: info.height + "px",
+          height: info.height + "px",
+          background: info.color,
+          opacity: info.opacity,
           left: info.left + "px",
           top: info.top + "px",
           zIndex: info.z_index,
           transform: info.rotate ? `rotate(${info.rotate}deg)` : `rotate(0deg)`,
         }}
-        className="absolute group hover:border hover:border-indigo-500"
+        className="absolute group hover:border hover:border-indigo-500 rounded-tl-full"
       >
-        <div
-          id={`${randomValue}c`}
-          className="rounded-tl-full"
-          style={{
-            width: info.width + "px",
-            height: info.width + "px",
-            background: info.color,
-            opacity: info.opacity,
-          }}
-        ></div>
+        <Element id={randomValue} info={info} exId="" />
+
         {currentComponent.id === info.id && (
           <div
             onClick={() => removeComponent(info.id)}
@@ -408,9 +396,9 @@ const CreateStructure = ({ info, currentComponent, removeComponent }) => {
         }}
         className="absolute group hover:border hover:border-indigo-500"
       >
+        <Element id={randomValue} info={info} exId={`${randomValue}s`} />
         <div
-          id={`${randomValue}c`}
-          // className="rounded-tl-4xl rounded-br-4xl"
+          id={`${randomValue}s`}
           style={{
             width: info.height + "px",
             height: info.height + "px",
@@ -420,6 +408,87 @@ const CreateStructure = ({ info, currentComponent, removeComponent }) => {
               "polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)",
           }}
         ></div>
+        {currentComponent.id === info.id && (
+          <div
+            onClick={() => removeComponent(info.id)}
+            className=" px-1 py-1 bg-white absolute top-0 hidden group-hover:block cursor-pointer rounded-full"
+          >
+            <BsTrash />
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // add text
+  if (info.name === "text") {
+    html = (
+      <div
+        id={randomValue}
+        onClick={() => info.setCurrentComponent(info)}
+        style={{
+          left: info.left + "px",
+          top: info.top + "px",
+          zIndex: info.z_index,
+          transform: info.rotate ? `rotate(${info.rotate}deg)` : `rotate(0deg)`,
+          padding: info.padding + "px",
+          color: info.color,
+          opacity: info.opacity,
+        }}
+        className="absolute group hover:border hover:border-indigo-500"
+      >
+        <Element id={randomValue} info={info} exId="" />
+        <h2
+          style={{ fontSize: info.font + "px", fontWeight: info.weight }}
+          className="w-full h-full "
+        >
+          {info.title}
+        </h2>
+        {currentComponent.id === info.id && (
+          <div
+            onClick={() => removeComponent(info.id)}
+            className=" px-1 py-1 bg-white absolute top-0 hidden group-hover:block cursor-pointer rounded-full"
+          >
+            <BsTrash />
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // add image
+  if (info.name === "image") {
+    html = (
+      <div
+        id={randomValue}
+        onClick={() => info.setCurrentComponent(info)}
+        style={{
+          left: info.left + "px",
+          top: info.top + "px",
+          zIndex: info.z_index,
+          transform: info.rotate ? `rotate(${info.rotate}deg)` : `rotate(0deg)`,
+          opacity: info.opacity,
+        }}
+        className="absolute group hover:border hover:border-indigo-500"
+      >
+        <Element id={randomValue} info={info} exId={`${randomValue}img`} />
+        <div
+          className="overflow-hidden"
+          id={`${randomValue}img`}
+          style={{
+            width: info.width + "px",
+            height: info.height + "px",
+            borderRadius: `${info.radius}%`,
+          }}
+        >
+          <img className="w-full h-full" src={info.image} alt="image" />
+        </div>
+        <h2
+          style={{ fontSize: info.font + "px", fontWeight: info.weight }}
+          className="w-full h-full "
+        >
+          {info.title}
+        </h2>
         {currentComponent.id === info.id && (
           <div
             onClick={() => removeComponent(info.id)}

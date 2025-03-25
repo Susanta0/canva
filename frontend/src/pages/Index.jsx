@@ -1,10 +1,39 @@
 import { useState } from "react";
 import "/src/index.css"; // Import the CSS file
+import api from "../utils/api";
 
 const Index = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [showSignupModal, setShowSignupModal] = useState(false);
   const [showSigninModal, setShowSigninModal] = useState(false);
+
+  const [loader, setLoader] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    try {
+      setLoader(true);
+      const { data } = await api.post("/api/user_register", formData);
+      setLoader(false);
+    } catch (error) {
+      console.error(error);
+
+      setLoader(false);
+    }
+  };
 
   return (
     <>
@@ -188,6 +217,8 @@ const Index = () => {
                             type="text"
                             name="name"
                             id="name"
+                            value={formData.name}
+                            onChange={handleChange}
                             className="shadow-sm focus:ring-purple-500 focus:border-purple-500 block w-full sm:text-sm border-gray-300 rounded-md p-2 border"
                             placeholder="John Doe"
                           />
@@ -205,6 +236,8 @@ const Index = () => {
                             type="email"
                             name="email"
                             id="email"
+                            value={formData.email}
+                            onChange={handleChange}
                             className="shadow-sm focus:ring-purple-500 focus:border-purple-500 block w-full sm:text-sm border-gray-300 rounded-md p-2 border"
                             placeholder="you@example.com"
                           />
@@ -222,6 +255,8 @@ const Index = () => {
                             type="password"
                             name="password"
                             id="password"
+                            value={formData.password}
+                            onChange={handleChange}
                             className="shadow-sm focus:ring-purple-500 focus:border-purple-500 block w-full sm:text-sm border-gray-300 rounded-md p-2 border"
                             placeholder="••••••••"
                           />
@@ -230,6 +265,7 @@ const Index = () => {
                     </div>
                     <div className="mt-6">
                       <button
+                        onClick={handleRegister}
                         type="button"
                         className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-500 text-base font-medium text-white hover:from-purple-700 hover:to-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 sm:text-sm"
                       >
@@ -475,11 +511,14 @@ const Index = () => {
         </div>
       )}
       <div className="flex items-center justify-center mt-60">
-        <div className="text-center bg-opacity-80 p-10 rounded-lg shadow-lg">
+        <div className="text-center bg-white bg-opacity-80 p-10 rounded-lg shadow-lg">
           <p className="text-2xl font-semibold text-gray-800 mb-4">
             What will you design today?
           </p>
-          <button className="mt-4 px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-500 text-white text-lg font-medium rounded-lg shadow-md hover:from-purple-700 hover:to-blue-600 transition-transform transform hover:-translate-y-1">
+          <button
+            onClick={() => setShowSigninModal(true)}
+            className="mt-4 px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-500 text-white text-lg font-medium rounded-lg shadow-md hover:from-purple-700 hover:to-blue-600 transition-transform transform hover:-translate-y-1"
+          >
             Create Design
           </button>
         </div>

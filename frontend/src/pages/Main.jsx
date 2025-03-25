@@ -12,6 +12,7 @@ import Projects from "../components/Projects";
 import Images from "../components/Images";
 import CreateStructure from "../components/CreateStructure";
 import { IoSettingsOutline } from "react-icons/io5";
+import { MdFormatColorText } from "react-icons/md";
 
 const Main = () => {
   const [currentComponent, setCurrentComponent] = useState("");
@@ -27,6 +28,16 @@ const Main = () => {
   const [rotate, setRotate] = useState(0);
   const [left, setLeft] = useState("");
   const [top, setTop] = useState("");
+  const [width, setWidth] = useState("");
+  const [height, setHeight] = useState("");
+  const [padding, setPadding] = useState("");
+  const [font, setFont] = useState("");
+  const [weight, setWeight] = useState("");
+
+  const [opacity, setOpacity] = useState("");
+  const [zIndex, setZindex] = useState("");
+  const [text, setText] = useState("");
+  const [radius, setRadius] = useState(0);
 
   const toggleSidebar = () => {
     setSidebarCollapsed(!sidebarCollapsed);
@@ -67,13 +78,80 @@ const Main = () => {
     window.addEventListener("mousemove", mouseMove);
     window.addEventListener("mouseup", mouseUp);
   };
+
   // re-size element
-  const reSizeElement = () => {
-    console.log("resize");
+  const reSizeElement = (id, currentInfo) => {
+    setCurrentComponent(currentInfo);
+    let isMove = true;
+    const currentDiv = document.getElementById(id);
+
+    const mouseMove = ({ movementX, movementY }) => {
+      const getStyle = window.getComputedStyle(currentDiv);
+      const width = parseInt(getStyle.width);
+      const height = parseInt(getStyle.height);
+
+      if (isMove) {
+        currentDiv.style.width = `${width + movementX}px`;
+        currentDiv.style.height = `${height + movementY}px`;
+      }
+    };
+
+    const mouseUp = (e) => {
+      isMove = false;
+      window.removeEventListener("mousemove", mouseMove);
+      window.removeEventListener("mouseup", mouseUp);
+      setWidth(parseInt(currentDiv.style.width));
+      setHeight(parseInt(currentDiv.style.height));
+    };
+
+    window.addEventListener("mousemove", mouseMove);
+    window.addEventListener("mouseup", mouseUp);
   };
+
   // rotate element
-  const rotateElement = () => {
-    console.log("rotate");
+  const rotateElement = (id, currentInfo) => {
+    setCurrentComponent("");
+    setCurrentComponent(currentInfo);
+
+    const target = document.getElementById(id);
+
+    const mouseMove = ({ movementX, movementY }) => {
+      const getStyle = window.getComputedStyle(target);
+
+      const trans = getStyle.transform;
+
+      const values = trans.split("(")[1].split(")")[0].split(",");
+
+      const angle = Math.round(
+        Math.atan2(values[1], values[0]) * (180 / Math.PI)
+      );
+
+      let deg = angle < 0 ? angle + 360 : angle;
+      if (movementX) {
+        deg = deg + movementX;
+      }
+      target.style.transform = `rotate(${deg}deg)`;
+    };
+
+    const mouseUp = (e) => {
+      window.removeEventListener("mousemove", mouseMove);
+      window.removeEventListener("mouseup", mouseUp);
+
+      const getStyle = window.getComputedStyle(target);
+
+      const trans = getStyle.transform;
+
+      const values = trans.split("(")[1].split(")")[0].split(",");
+
+      const angle = Math.round(
+        Math.atan2(values[1], values[0]) * (180 / Math.PI)
+      );
+
+      let deg = angle < 0 ? angle + 360 : angle;
+      setRotate(deg);
+    };
+    window.addEventListener("mousemove", mouseMove);
+    window.addEventListener("mouseup", mouseUp);
   };
 
   // remove component
@@ -92,6 +170,38 @@ const Main = () => {
     setComponents([...tempt, come]);
   };
 
+  // opacity handle
+  const opacityHandle = (e) => {
+    setOpacity(parseFloat(e.target.value));
+  };
+
+  // add text
+  const addText = (name, type) => {
+    const style = {
+      id: components.length + 1,
+      name: name,
+      type: type,
+      left: 10,
+      top: 10,
+      opacity: 1,
+      rotate,
+      z_index: 10,
+      padding: 6,
+      font: 32,
+      title: "Add text",
+      weight: 400,
+      color: "#3c3c3d",
+      setCurrentComponent: (a) => setCurrentComponent(a),
+      rotateElement,
+      moveElement,
+      reSizeElement,
+    };
+    setWeight("");
+    setFont("");
+    setCurrentComponent(style);
+    setComponents([...components, style]);
+  };
+
   // create shape
   const createShape = (name, type) => {
     const style = {
@@ -107,7 +217,6 @@ const Main = () => {
       z_index: 2,
       color: "#3c3c3d",
       setCurrentComponent: (a) => setCurrentComponent(a),
-      removeBackground: () => setImage(""),
       rotateElement,
       moveElement,
       reSizeElement,
@@ -116,6 +225,29 @@ const Main = () => {
     setComponents([...components, style]);
   };
 
+  // add image
+  const addImage = (img) => {
+    const style = {
+      id: components.length + 1,
+      name: "image",
+      type: "image",
+      left: 10,
+      top: 10,
+      width: 200,
+      height: 150,
+      opacity: 1,
+      rotate,
+      z_index: 2,
+      radius: 0,
+      image: img,
+      setCurrentComponent: (a) => setCurrentComponent(a),
+      rotateElement,
+      moveElement,
+      reSizeElement,
+    };
+    setCurrentComponent(style);
+    setComponents([...components, style]);
+  };
   const [components, setComponents] = useState([
     {
       name: "main-frame",
@@ -135,6 +267,23 @@ const Main = () => {
       const index = components.findIndex((c) => c.id === currentComponent.id);
       const tempt = components.filter((c) => c.id !== currentComponent.id);
 
+      if (currentComponent.name === "text") {
+        components[index].padding = padding || currentComponent.padding;
+        components[index].font = font || currentComponent.font;
+        components[index].weight = weight || currentComponent.weight;
+        components[index].title = text || currentComponent.title;
+      }
+
+      if (currentComponent.name !== "text") {
+        components[index].width = width || currentComponent.width;
+        components[index].height = height || currentComponent.height;
+        components[index].rotate = rotate || currentComponent.rotate;
+      }
+
+      if (currentComponent.name === "image") {
+        components[index].radius = radius || currentComponent.radius;
+      }
+
       if (currentComponent.name === "main-frame" && image) {
         components[index].image = image || currentComponent.image;
       }
@@ -143,11 +292,38 @@ const Main = () => {
       if (currentComponent.name !== "main-frame") {
         components[index].left = left || currentComponent.left;
         components[index].top = top || currentComponent.top;
+        components[index].opacity = opacity || currentComponent.opacity;
+        components[index].z_index = zIndex || currentComponent.z_index;
       }
 
       setComponents([...tempt, components[index]]);
+
+      setColor("");
+      setWidth("");
+      setHeight("");
+      setTop("");
+      setLeft("");
+      setRotate(0);
+      setOpacity("");
+      setZindex("");
+      setText("");
     }
-  }, [color, image, left, top]);
+  }, [
+    color,
+    image,
+    left,
+    top,
+    width,
+    height,
+    rotate,
+    opacity,
+    zIndex,
+    padding,
+    font,
+    weight,
+    text,
+    radius,
+  ]);
 
   const menuItems = [
     { id: "design", icon: <BsGrid1X2 />, label: "Design" },
@@ -234,12 +410,14 @@ const Main = () => {
               {menuItems.find((item) => item.id === activeTab)?.label}
             </div>
 
-            {/* Tab content */}
+            {/* design content */}
             {activeTab === "design" && (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <TemplateDesign />
               </div>
             )}
+
+            {/* shape content */}
             {activeTab === "shape" && (
               <div className="grid grid-cols-3 gap-3">
                 <div
@@ -308,23 +486,36 @@ const Main = () => {
                 ></div>
               </div>
             )}
+
+            {/* upload content */}
             {activeTab === "upload" && <MyImages />}
+
+            {/* text content */}
             {activeTab === "text" && (
               <div className="w-full">
                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-1">
-                  <div className="bg-gradient-to-r from-purple-700 to-purple-900 hover:from-purple-800 hover:to-purple-950 cursor-pointer font-bold p-4 text-white text-lg md:text-xl rounded-lg transition-all duration-300 shadow-md hover:shadow-purple-700/50 flex items-center gap-3 transform hover:translate-y-[-2px]">
+                  <div
+                    onClick={() => addText("text", "title")}
+                    className="bg-gradient-to-r from-purple-700 to-purple-900 hover:from-purple-800 hover:to-purple-950 cursor-pointer font-bold p-4 text-white text-lg md:text-xl rounded-lg transition-all duration-300 shadow-md hover:shadow-purple-700/50 flex items-center gap-3 transform hover:translate-y-[-2px]"
+                  >
                     <TfiText className="h-5 w-5 md:h-6 md:w-6" />
                     <h2>Add a Text</h2>
                   </div>
                 </div>
               </div>
             )}
+
+            {/* project content */}
             {activeTab === "projects" && <Projects />}
+
+            {/* image content */}
             {activeTab === "image" && (
               <div className="h-[88vh] overflow-x-auto flex justify-start items-start custom-scrollbar">
-                <Images />
+                <Images add_image={addImage} />
               </div>
             )}
+
+            {/* background content */}
             {activeTab === "background" && (
               <div className="h-[88vh] overflow-x-auto flex justify-start items-start custom-scrollbar">
                 <div className="grid grid-cols-2 gap-2">
@@ -384,36 +575,6 @@ const Main = () => {
                 </h3>
 
                 <div className="space-y-4">
-                  {/* <div className="bg-gray-800/50 p-3 rounded-md border border-gray-700/50">
-                    <h4 className="font-medium text-purple-300 mb-2">
-                      Dimensions
-                    </h4>
-                    <div className="grid grid-cols-2 gap-2">
-                      <div>
-                        <label className="text-xs text-gray-400 block mb-1">
-                          Width (px)
-                        </label>
-                        <input
-                          type="number"
-                          value={currentComponent.width || 0}
-                          className="w-full bg-gray-700/70 border border-gray-600 rounded py-1 px-2 text-sm focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500"
-                          readOnly
-                        />
-                      </div>
-                      <div>
-                        <label className="text-xs text-gray-400 block mb-1">
-                          Height (px)
-                        </label>
-                        <input
-                          type="number"
-                          value={currentComponent.height || 0}
-                          className="w-full bg-gray-700/70 border border-gray-600 rounded py-1 px-2 text-sm focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500"
-                          readOnly
-                        />
-                      </div>
-                    </div>
-                  </div> */}
-
                   <div className="bg-gray-800/50 p-3 rounded-md border-gray-700/50">
                     <h4 className="font-medium text-purple-300 mb-2">
                       Appearance
@@ -443,17 +604,6 @@ const Main = () => {
                         />
                       </div>
                     </div>
-                    {/* <div>
-                      <label className="text-xs text-gray-400 block mb-1">
-                        Z-Index
-                      </label>
-                      <input
-                        type="number"
-                        value={currentComponent.z_index || 1}
-                        className="w-full bg-gray-700/70 border border-gray-600 rounded py-1 px-2 text-sm focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500"
-                        readOnly
-                      />
-                    </div> */}
                   </div>
 
                   {currentComponent.name === "main-frame" && image && (
@@ -472,6 +622,175 @@ const Main = () => {
                           Remove Background
                         </button>
                       </div>
+                    </div>
+                  )}
+
+                  {currentComponent.name !== "main-frame" && (
+                    <div className="space-y-4">
+                      <div className="bg-gray-800/60 p-4 rounded-lg border border-purple-500/20 shadow-lg">
+                        <h4 className="text-purple-300 font-semibold mb-3 border-b border-gray-700 pb-2 flex items-center">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            className="h-5 w-5 mr-2 text-purple-400"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.485 8.485M7 17h.01"
+                            />
+                          </svg>
+                          Styling Controls
+                        </h4>
+
+                        <div className="grid grid-cols-2 gap-3">
+                          <div>
+                            <label className="text-xs text-gray-400 block mb-1">
+                              Opacity
+                            </label>
+                            <div className="flex items-center">
+                              <input
+                                type="range"
+                                min="0.1"
+                                max="1"
+                                step="0.1"
+                                onChange={opacityHandle}
+                                value={currentComponent.opacity}
+                                className="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-purple-500"
+                              />
+                              <span className="ml-2 text-xs text-purple-300 w-10">
+                                {(currentComponent.opacity * 100).toFixed(0)}%
+                              </span>
+                            </div>
+                          </div>
+
+                          <div>
+                            <label className="text-xs text-gray-400 block mb-1">
+                              Z-index
+                            </label>
+                            <div className="flex items-center">
+                              <input
+                                type="number"
+                                step={1}
+                                onChange={(e) =>
+                                  setZindex(parseInt(e.target.value))
+                                }
+                                value={currentComponent.z_index}
+                                className="w-full bg-gray-700/70 border border-gray-600 rounded py-1 px-2 text-sm focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500"
+                              />
+                            </div>
+                          </div>
+                          {currentComponent.name === "image" && (
+                            <div>
+                              <label className="text-xs text-gray-400 block mb-1">
+                                Radius
+                              </label>
+                              <div className="flex items-center">
+                                <input
+                                  type="number"
+                                  step={1}
+                                  onChange={(e) =>
+                                    setRadius(parseInt(e.target.value))
+                                  }
+                                  value={currentComponent.radius}
+                                  className="w-full bg-gray-700/70 border border-gray-600 rounded py-1 px-2 text-sm focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500"
+                                />
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+
+                      {currentComponent.name === "text" && (
+                        <div className="bg-gray-800/60 p-4 rounded-lg border border-purple-500/20 shadow-lg">
+                          <h4 className="text-purple-300 font-semibold mb-3 border-b border-gray-700 pb-2 flex items-center">
+                            <MdFormatColorText className="h-5 w-5 mr-2 text-purple-400" />
+                            Text Formatting
+                          </h4>
+
+                          <div className="grid grid-cols-2 gap-3">
+                            <div>
+                              <label className="text-xs text-gray-400 block mb-1">
+                                Padding
+                              </label>
+                              <input
+                                type="number"
+                                step={1}
+                                onChange={(e) =>
+                                  setPadding(parseInt(e.target.value))
+                                }
+                                value={currentComponent.padding}
+                                className="w-full bg-gray-700/70 border border-gray-600 rounded py-1 px-2 text-sm focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500"
+                              />
+                            </div>
+
+                            <div>
+                              <label className="text-xs text-gray-400 block mb-1">
+                                Font Size
+                              </label>
+                              <input
+                                type="number"
+                                step={1}
+                                onChange={(e) =>
+                                  setFont(parseInt(e.target.value))
+                                }
+                                value={currentComponent.font}
+                                className="w-full bg-gray-700/70 border border-gray-600 rounded py-1 px-2 text-sm focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500"
+                              />
+                            </div>
+                          </div>
+
+                          <div className="mt-3">
+                            <label className="text-xs text-gray-400 block mb-1">
+                              Font Weight
+                            </label>
+                            <input
+                              type="range"
+                              min="100"
+                              max="900"
+                              step="100"
+                              onChange={(e) =>
+                                setWeight(parseInt(e.target.value))
+                              }
+                              value={currentComponent.weight}
+                              className="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-purple-500"
+                            />
+                            <div className="flex justify-between text-xs text-gray-400 mt-1">
+                              <span>Thin</span>
+                              <span>Bold</span>
+                            </div>
+                          </div>
+
+                          <div className="mt-3">
+                            <label className="text-xs text-gray-400 block mb-1">
+                              Text Content
+                            </label>
+                            <div className="flex">
+                              <input
+                                type="text"
+                                onChange={(e) =>
+                                  setCurrentComponent({
+                                    ...currentComponent,
+                                    title: e.target.value,
+                                  })
+                                }
+                                value={currentComponent.title}
+                                className="w-full bg-gray-700/70 border border-gray-600 rounded py-1 px-2 text-sm focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500"
+                                placeholder="Enter your text"
+                              />
+                              <button
+                                onClick={() => setText(currentComponent.title)}
+                                className="ml-2 bg-purple-600 hover:bg-purple-700 text-white px-3 py-1 rounded text-sm transition-colors duration-200"
+                              >
+                                Add
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      )}
                     </div>
                   )}
                 </div>
