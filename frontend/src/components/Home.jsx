@@ -206,7 +206,7 @@ const Home = () => {
       </div>
 
       {/* Templates Section */}
-      <div className="mt-8 sm:mt-12">
+      {/* <div className="mt-8 sm:mt-12">
         <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-4 sm:mb-6">
           Recommended templates
         </h2>
@@ -237,7 +237,7 @@ const Home = () => {
             </div>
           ))}
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };
