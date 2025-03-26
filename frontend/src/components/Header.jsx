@@ -1,7 +1,9 @@
 import React, { useState } from "react";
+import * as htmlToImage from "html-to-image";
 import { Link } from "react-router-dom";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { RxCross2 } from "react-icons/rx";
+import useDownloader from "react-use-downloader";
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -9,6 +11,19 @@ const Header = () => {
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
   };
+
+  const { download } = useDownloader();
+  const downloadImage = async () => {
+    const targetDiv = document.getElementById("main_design");
+    const dataUrl = await htmlToImage.toPng(targetDiv, {
+      style: {
+        transform: "scale(1)",
+      },
+    });
+    download(dataUrl, "image.png");
+  };
+
+  const saveImage = () => {};
 
   return (
     <header className="w-full">
@@ -37,10 +52,16 @@ const Header = () => {
           <div className="flex items-center space-x-3 z-10">
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-3">
-              <button className="px-4 py-2 bg-purple-700 hover:bg-purple-600 rounded text-white font-medium transition-colors duration-200 shadow-md">
+              <button
+                onClick={saveImage}
+                className="px-4 py-2 bg-purple-700 hover:bg-purple-600 rounded text-white font-medium transition-colors duration-200 shadow-md"
+              >
                 Save
               </button>
-              <button className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 rounded text-white font-medium transition-colors duration-200 shadow-md">
+              <button
+                onClick={downloadImage}
+                className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 rounded text-white font-medium transition-colors duration-200 shadow-md"
+              >
                 Download
               </button>
             </div>

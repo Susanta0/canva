@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import Header from "../components/Header";
 import { BsFillImageFill, BsFolder, BsGrid1X2 } from "react-icons/bs";
 import { RxTransparencyGrid } from "react-icons/rx";
@@ -13,8 +14,11 @@ import Images from "../components/Images";
 import CreateStructure from "../components/CreateStructure";
 import { IoSettingsOutline } from "react-icons/io5";
 import { MdFormatColorText } from "react-icons/md";
+import api from "../utils/api";
 
 const Main = () => {
+  const { design_id } = useParams();
+
   const [currentComponent, setCurrentComponent] = useState("");
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [activeTab, setActiveTab] = useState("design");
@@ -334,6 +338,26 @@ const Main = () => {
     { id: "image", icon: <BsFillImageFill />, label: "Images" },
     { id: "background", icon: <RxTransparencyGrid />, label: "Background" },
   ];
+
+  useEffect(() => {
+    const getDesign = async () => {
+      try {
+        const { data } = await api.get(`/api/user_design/${design_id}`);
+        const { design } = data;
+        for (let i = 0; i < design.length; i++) {
+          (design[i].setCurrentComponent = (a) => setCurrentComponent(a)),
+            (design[i].rotateElement = rotateElement);
+          design[i].moveElement = moveElement;
+          design[i].reSizeElement = reSizeElement;
+          design[i].removeBackground = removeBackground;
+        }
+        setComponents(design);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getDesign();
+  }, [design_id]);
 
   return (
     <div className="min-w-screen min-h-screen h-screen bg-gradient-to-b from-gray-950 to-black overflow-hidden">

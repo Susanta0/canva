@@ -10,7 +10,7 @@ const CreateStructure = ({ info, currentComponent, removeComponent }) => {
     html = (
       <div
         onClick={() => info.setCurrentComponent(info)}
-        className={` hover:border-indigo-500 shadow-md rounded-md transition-all duration-300 ${
+        className={` hover:border-indigo-500 shadow-md transition-all duration-300 ${
           currentComponent && currentComponent.id === info.id
             ? "ring-2 ring-purple-500 ring-offset-2 ring-offset-gray-900"
             : "hover:shadow-lg hover:shadow-purple-500/20"
