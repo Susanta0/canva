@@ -17,7 +17,8 @@ const Home = () => {
     setCustomValue({ ...customValue, [name]: updatedValue });
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
     navigate("/design/create", {
       state: {
         type: "create",
@@ -53,7 +54,8 @@ const Home = () => {
         </button>
 
         {/* Custom Size Popup */}
-        <div
+        <form
+          onSubmit={handleSubmit}
           className={`absolute top-12 sm:top-16 right-3 sm:right-4 gap-3 bg-[#252627] w-[250px] sm:w-[280px] p-4 sm:p-5 text-white rounded-lg shadow-2xl border border-[#3d3d3d] ${
             show
               ? "visible opacity-100 transform translate-y-0"
@@ -75,6 +77,7 @@ const Home = () => {
                 type="number"
                 name="width"
                 value={customValue.width}
+                required
                 onChange={handleChange}
                 placeholder="1920"
                 className="outline-none w-full px-2 sm:px-3 py-1.5 sm:py-2 border border-[#4d4d4d] bg-[#1a1a1a] rounded-md focus:border-purple-500 transition-colors duration-200 text-sm"
@@ -92,18 +95,16 @@ const Home = () => {
                 name="height"
                 value={customValue.height}
                 onChange={handleChange}
+                required
                 placeholder="1080"
                 className="outline-none w-full px-2 sm:px-3 py-1.5 sm:py-2 border border-[#4d4d4d] bg-[#1a1a1a] rounded-md focus:border-purple-500 transition-colors duration-200 text-sm"
               />
             </div>
           </div>
-          <button
-            onClick={handleSubmit}
-            className="w-full px-3 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm overflow-hidden text-center bg-gradient-to-r from-purple-600 to-blue-500 text-white rounded-md font-medium hover:from-purple-700 hover:to-blue-600 transition-all duration-300 shadow-md"
-          >
+          <button className="w-full px-3 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm overflow-hidden text-center bg-gradient-to-r from-purple-600 to-blue-500 text-white rounded-md font-medium hover:from-purple-700 hover:to-blue-600 transition-all duration-300 shadow-md">
             Create Design
           </button>
-        </div>
+        </form>
 
         {/* Hero Content */}
         <div className="text-center px-4 transform transition-all duration-300 hover:scale-105">
