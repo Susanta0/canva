@@ -28,10 +28,36 @@ const Index = () => {
       setLoader(true);
       const { data } = await api.post("/api/user_register", formData);
       setLoader(false);
+      localStorage.setItem("canva_token", data.token);
+      setFormData({
+        name: "",
+        email: "",
+        password: "",
+      });
+      window.location.href = "/";
+      console.log(data);
     } catch (error) {
-      console.error(error);
-
       setLoader(false);
+      console.error(error);
+    }
+  };
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    try {
+      setLoader(true);
+      const { data } = await api.post("/api/user_login", formData);
+      setLoader(false);
+      localStorage.setItem("canva_token", data.token);
+      setFormData({
+        email: "",
+        password: "",
+      });
+      window.location.href = "/";
+      console.log(data);
+    } catch (error) {
+      setLoader(false);
+      console.error(error);
     }
   };
 
@@ -80,13 +106,13 @@ const Index = () => {
               <div className="ml-6 flex items-center space-x-4">
                 <button
                   onClick={() => setShowSigninModal(true)}
-                  className="text-gray-600 hover:text-gray-900 font-medium px-3 py-2 rounded-md text-sm transition duration-150 ease-in-out"
+                  className="cursor-pointer text-gray-600 hover:text-gray-900 font-medium px-3 py-2 rounded-md text-sm transition duration-150 ease-in-out"
                 >
                   Log in
                 </button>
                 <button
                   onClick={() => setShowSignupModal(true)}
-                  className="bg-gradient-to-r from-purple-600 to-blue-500 hover:from-purple-700 hover:to-blue-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition duration-150 ease-in-out shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+                  className="cursor-pointer bg-gradient-to-r from-purple-600 to-blue-500 hover:from-purple-700 hover:to-blue-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition duration-150 ease-in-out shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
                 >
                   Sign up free
                 </button>
@@ -168,7 +194,7 @@ const Index = () => {
                     setIsOpen(false);
                     setShowSigninModal(true);
                   }}
-                  className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
+                  className="cursor-pointer block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
                 >
                   Log in
                 </button>
@@ -177,7 +203,7 @@ const Index = () => {
                     setIsOpen(false);
                     setShowSignupModal(true);
                   }}
-                  className="block w-full text-left px-3 py-2 rounded-md text-base font-medium bg-gradient-to-r from-purple-600 to-blue-500 text-white"
+                  className="cursor-pointer block w-full text-left px-3 py-2 rounded-md text-base font-medium bg-gradient-to-r from-purple-600 to-blue-500 text-white"
                 >
                   Sign up free
                 </button>
@@ -217,6 +243,7 @@ const Index = () => {
                             type="text"
                             name="name"
                             id="name"
+                            required
                             value={formData.name}
                             onChange={handleChange}
                             className="shadow-sm focus:ring-purple-500 focus:border-purple-500 block w-full sm:text-sm border-gray-300 rounded-md p-2 border"
@@ -236,6 +263,7 @@ const Index = () => {
                             type="email"
                             name="email"
                             id="email"
+                            required
                             value={formData.email}
                             onChange={handleChange}
                             className="shadow-sm focus:ring-purple-500 focus:border-purple-500 block w-full sm:text-sm border-gray-300 rounded-md p-2 border"
@@ -255,6 +283,7 @@ const Index = () => {
                             type="password"
                             name="password"
                             id="password"
+                            required
                             value={formData.password}
                             onChange={handleChange}
                             className="shadow-sm focus:ring-purple-500 focus:border-purple-500 block w-full sm:text-sm border-gray-300 rounded-md p-2 border"
@@ -267,9 +296,10 @@ const Index = () => {
                       <button
                         onClick={handleRegister}
                         type="button"
-                        className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-500 text-base font-medium text-white hover:from-purple-700 hover:to-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 sm:text-sm"
+                        disabled={loader}
+                        className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gradient-to-r cursor-pointer from-purple-600 to-blue-500 text-base font-medium text-white hover:from-purple-700 hover:to-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 sm:text-sm"
                       >
-                        Sign up
+                        {loader ? "Loading..." : "Sign up"}
                       </button>
                     </div>
                     <div className="mt-6">
@@ -369,7 +399,7 @@ const Index = () => {
                     <div className="mt-2 space-y-4">
                       <div>
                         <label
-                          htmlFor="signin-email"
+                          htmlFor="email"
                           className="block text-sm font-medium text-gray-700"
                         >
                           Email address
@@ -377,8 +407,11 @@ const Index = () => {
                         <div className="mt-1">
                           <input
                             type="email"
-                            name="signin-email"
-                            id="signin-email"
+                            name="email"
+                            id="email"
+                            value={formData.email}
+                            onChange={handleChange}
+                            required
                             className="shadow-sm focus:ring-purple-500 focus:border-purple-500 block w-full sm:text-sm border-gray-300 rounded-md p-2 border"
                             placeholder="you@example.com"
                           />
@@ -386,7 +419,7 @@ const Index = () => {
                       </div>
                       <div>
                         <label
-                          htmlFor="signin-password"
+                          htmlFor="password"
                           className="block text-sm font-medium text-gray-700"
                         >
                           Password
@@ -394,8 +427,11 @@ const Index = () => {
                         <div className="mt-1">
                           <input
                             type="password"
-                            name="signin-password"
-                            id="signin-password"
+                            name="password"
+                            id="password"
+                            value={formData.password}
+                            onChange={handleChange}
+                            required
                             className="shadow-sm focus:ring-purple-500 focus:border-purple-500 block w-full sm:text-sm border-gray-300 rounded-md p-2 border"
                             placeholder="••••••••"
                           />
@@ -429,9 +465,11 @@ const Index = () => {
                     <div className="mt-6">
                       <button
                         type="button"
+                        onClick={handleLogin}
+                        disabled={loader}
                         className="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-500 text-base font-medium text-white hover:from-purple-700 hover:to-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 sm:text-sm"
                       >
-                        Sign in
+                        {loader ? "Loading..." : "Sign in"}
                       </button>
                     </div>
                     <div className="mt-6">
