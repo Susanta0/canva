@@ -1,6 +1,7 @@
 const { formidable } = require("formidable");
 const designModel = require("../models/designModel");
 const cloudinary = require("cloudinary").v2;
+
 const designController = {
   async createUserDesign(req, res) {
     const form = formidable({});
@@ -26,6 +27,16 @@ const designController = {
       return res.status(201).json({ design });
     } catch (error) {
       console.log(error);
+      return res.status(500).json({ message: error.message });
+    }
+  },
+
+  async getUserDesign(req, res) {
+    const { design_id } = req.params;
+    try {
+      const design = await designModel.findById(design_id);
+      return res.status(201).json({ design: design.components });
+    } catch (error) {
       return res.status(500).json({ message: error.message });
     }
   },
