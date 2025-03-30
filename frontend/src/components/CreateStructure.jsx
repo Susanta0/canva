@@ -29,11 +29,6 @@ const CreateStructure = ({ info, currentComponent, removeComponent }) => {
             alt="image"
           />
         )}
-        {!info.image && !currentComponent && (
-          <div className="absolute inset-0 flex items-center justify-center text-white/50 text-sm font-medium">
-            Click to select frame
-          </div>
-        )}
       </div>
     );
   }

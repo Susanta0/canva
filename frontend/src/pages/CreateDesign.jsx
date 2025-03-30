@@ -35,7 +35,6 @@ const CreateDesign = () => {
         setLoader(true);
         const { data } = await api.post("/api/create_user_design", formData);
         navigate(`/design/${data.design._id}/edit`);
-        console.log(data);
 
         setLoader(false);
       } catch (error) {

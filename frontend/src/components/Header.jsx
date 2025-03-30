@@ -4,15 +4,20 @@ import { Link } from "react-router-dom";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { RxCross2 } from "react-icons/rx";
 import useDownloader from "react-use-downloader";
+import api from "../utils/api";
+import toast from "react-hot-toast";
 
-const Header = () => {
+const Header = ({ components, design_id }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [loader, setLoader] = useState(false);
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
   };
 
   const { download } = useDownloader();
+
+  // download image
   const downloadImage = async () => {
     const targetDiv = document.getElementById("main_design");
     const dataUrl = await htmlToImage.toPng(targetDiv, {
@@ -23,7 +28,33 @@ const Header = () => {
     download(dataUrl, "image.png");
   };
 
-  const saveImage = () => {};
+  // save image
+  const saveImage = async () => {
+    const getDiv = document.getElementById("main_design");
+    const image = await htmlToImage.toBlob(getDiv);
+
+    if (image) {
+      const obj = {
+        design: components,
+      };
+      const formData = new FormData();
+      formData.append("design", JSON.stringify(obj));
+      formData.append("image", image);
+      try {
+        setLoader(true);
+        const { data } = await api.put(
+          `/api/update_user_design/${design_id}`,
+          formData
+        );
+        toast.success("Image saved successfully!");
+
+        setLoader(false);
+      } catch (error) {
+        setLoader(false);
+        toast.error("Error saving image. Please try again.");
+      }
+    }
+  };
 
   return (
     <header className="w-full">
@@ -54,9 +85,12 @@ const Header = () => {
             <div className="hidden md:flex items-center space-x-3">
               <button
                 onClick={saveImage}
-                className="px-4 py-2 bg-purple-700 hover:bg-purple-600 rounded text-white font-medium transition-colors duration-200 shadow-md"
+                disabled={loader}
+                className={`px-4 py-2 bg-purple-700 hover:bg-purple-600 rounded text-white font-medium transition-colors duration-200 shadow-md ${
+                  loader ? "opacity-50 cursor-not-allowed" : ""
+                }`}
               >
-                Save
+                {loader ? "Saving..." : "Save"}
               </button>
               <button
                 onClick={downloadImage}
@@ -87,10 +121,19 @@ const Header = () => {
       {mobileMenuOpen && (
         <div className="md:hidden bg-purple-900/95 text-white">
           <div className="flex flex-col items-center py-4 space-y-3 px-6">
-            <button className="w-full py-3 bg-purple-700 hover:bg-purple-600 rounded text-white font-medium transition-colors duration-200">
-              Save
+            <button
+              onClick={saveImage}
+              disabled={loader}
+              className={`w-full py-3 bg-purple-700 hover:bg-purple-600 rounded text-white font-medium transition-colors duration-200 ${
+                loader ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+            >
+              {loader ? "Saving..." : "Save"}
             </button>
-            <button className="w-full py-3 bg-indigo-600 hover:bg-indigo-500 rounded text-white font-medium transition-colors duration-200">
+            <button
+              onClick={downloadImage}
+              className="w-full py-3 bg-indigo-600 hover:bg-indigo-500 rounded text-white font-medium transition-colors duration-200"
+            >
               Download
             </button>
           </div>
