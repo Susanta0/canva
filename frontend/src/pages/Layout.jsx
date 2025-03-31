@@ -1,16 +1,21 @@
 import React, { useState, useEffect } from "react";
-import { Link, Outlet, useLocation } from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { RxHome } from "react-icons/rx";
 import { FaRegFolderClosed } from "react-icons/fa6";
 import { HiOutlineTemplate } from "react-icons/hi";
 import { HiMenuAlt2 } from "react-icons/hi";
 import { IoClose } from "react-icons/io5";
+import { token_decode } from "../utils/index";
+import default_user from "/default_user.png";
 
 const Layout = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
   const { pathname } = useLocation();
+  const navigate = useNavigate();
+
+  const userInfo = token_decode(localStorage.getItem("canva_token"));
 
   // Handle screen resize and set mobile state
   useEffect(() => {
@@ -60,6 +65,22 @@ const Layout = () => {
     }
   };
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    navigate("/design/create", {
+      state: {
+        type: "create",
+        width: 600,
+        height: 450,
+      },
+    });
+  };
+
+  const logout = () => {
+    localStorage.removeItem("canva_token");
+    window.location.href = "/";
+  };
+
   return (
     <div className="min-h-screen w-full bg-gradient-to-b from-[#343E42] to-[#282f32] text-white">
       {/* Navigation Bar */}
@@ -88,7 +109,10 @@ const Layout = () => {
 
         {/* Right side - Design button and Profile Image */}
         <div className="flex items-center space-x-2 sm:space-x-4">
-          <button className="px-2 py-1 sm:px-3 sm:py-1.5 md:px-4 md:py-2 text-xs sm:text-sm md:text-base text-white bg-gradient-to-r from-purple-600 to-blue-500 rounded-md hover:from-purple-700 hover:to-blue-600 transition-all duration-300 shadow-md shadow-purple-900/20">
+          <button
+            onClick={handleSubmit}
+            className="cursor-pointer px-2 py-1 sm:px-3 sm:py-1.5 md:px-4 md:py-2 text-xs sm:text-sm md:text-base text-white bg-gradient-to-r from-purple-600 to-blue-500 rounded-md hover:from-purple-700 hover:to-blue-600 transition-all duration-300 shadow-md shadow-purple-900/20"
+          >
             Create Design
           </button>
           <div className="relative profile-menu-container">
@@ -97,7 +121,7 @@ const Layout = () => {
               onClick={toggleMenu}
             >
               <img
-                src="/profile-pic.jpg"
+                src={userInfo.image ? userInfo.image : default_user}
                 alt="Profile"
                 className="w-full h-full object-cover"
                 onError={(e) => {
@@ -112,10 +136,10 @@ const Layout = () => {
                 {/* User Info */}
                 <div className="px-3 sm:px-4 py-2 sm:py-3 border-b border-gray-700">
                   <p className="text-xs sm:text-sm font-medium text-white">
-                    John Doe
+                    {userInfo.name}
                   </p>
                   <p className="text-xs text-gray-400 truncate">
-                    john.doe@example.com
+                    {userInfo.email}
                   </p>
                 </div>
 
@@ -133,7 +157,10 @@ const Layout = () => {
                   Your Account
                 </Link>
                 <div className="border-t border-gray-700 my-1"></div>
-                <button className="block w-full text-left px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm text-red-400 hover:bg-[#3a464b] transition-colors">
+                <button
+                  onClick={logout}
+                  className="block w-full text-left px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm text-red-400 hover:bg-[#3a464b] transition-colors"
+                >
                   Logout
                 </button>
               </div>
@@ -181,7 +208,7 @@ const Layout = () => {
             <div className="relative">
               <img
                 className="rounded-full h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12 border-2 border-purple-500/30 object-cover"
-                src="/profile-pic.jpg"
+                src={userInfo.image ? userInfo.image : default_user}
                 alt="profile"
                 onError={(e) => {
                   e.target.src = `https://ui-avatars.com/api/?name=Susanta&background=8B5CF6&color=fff`;
@@ -192,7 +219,7 @@ const Layout = () => {
 
             <div className="flex flex-col justify-center">
               <span className="font-medium text-white text-sm sm:text-base">
-                Susanta
+                {userInfo.name}
               </span>
               <div className="flex items-center">
                 <span className="text-xs sm:text-sm text-gray-400">Free</span>

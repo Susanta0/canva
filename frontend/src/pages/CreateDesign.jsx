@@ -15,7 +15,7 @@ const CreateDesign = () => {
   const designObj = {
     name: "main-frame",
     type: "react",
-    id: Math.floor(Math.random() * 100 + 1),
+    id: Date.now(),
     width: state.width,
     height: state.height,
     z_index: 1,

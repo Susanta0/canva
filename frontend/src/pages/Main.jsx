@@ -10,11 +10,12 @@ import { HiChevronDoubleLeft, HiChevronDoubleRight } from "react-icons/hi";
 import TemplateDesign from "../components/TemplateDesign";
 import MyImages from "../components/MyImages";
 import Projects from "../components/Projects";
-import Images from "../components/Images";
 import CreateStructure from "../components/CreateStructure";
 import { IoSettingsOutline } from "react-icons/io5";
 import { MdFormatColorText } from "react-icons/md";
 import api from "../utils/api";
+import InitialImages from "../components/InitialImages";
+import BackgroundImages from "../components/BackgroundImages";
 
 const Main = () => {
   const { design_id } = useParams();
@@ -182,7 +183,7 @@ const Main = () => {
   // add text
   const addText = (name, type) => {
     const style = {
-      id: components.length + 1,
+      id: Date.now(),
       name: name,
       type: type,
       left: 10,
@@ -209,7 +210,7 @@ const Main = () => {
   // create shape
   const createShape = (name, type) => {
     const style = {
-      id: components.length + 1,
+      id: Date.now(),
       name: name,
       type: type,
       left: 10,
@@ -232,7 +233,7 @@ const Main = () => {
   // add image
   const addImage = (img) => {
     const style = {
-      id: components.length + 1,
+      id: Date.now(),
       name: "image",
       type: "image",
       left: 10,
@@ -436,8 +437,8 @@ const Main = () => {
 
             {/* design content */}
             {activeTab === "design" && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <TemplateDesign />
+              <div>
+                <TemplateDesign type="main" />
               </div>
             )}
 
@@ -512,7 +513,7 @@ const Main = () => {
             )}
 
             {/* upload content */}
-            {activeTab === "upload" && <MyImages />}
+            {activeTab === "upload" && <MyImages add_image={addImage} />}
 
             {/* text content */}
             {activeTab === "text" && (
@@ -530,39 +531,21 @@ const Main = () => {
             )}
 
             {/* project content */}
-            {activeTab === "projects" && <Projects />}
+            {activeTab === "projects" && (
+              <Projects type="main" design_id={design_id} />
+            )}
 
             {/* image content */}
             {activeTab === "image" && (
-              <div className="h-[88vh] overflow-x-auto flex justify-start items-start custom-scrollbar">
-                <Images add_image={addImage} />
+              <div className="h-[80vh] overflow-x-auto flex justify-start items-start custom-scrollbar">
+                <InitialImages add_image={addImage} />
               </div>
             )}
 
             {/* background content */}
             {activeTab === "background" && (
-              <div className="h-[88vh] overflow-x-auto flex justify-start items-start custom-scrollbar">
-                <div className="grid grid-cols-2 gap-2">
-                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15].map(
-                    (img, ind) => (
-                      <div
-                        onClick={() =>
-                          setImage(
-                            "https://static.vecteezy.com/system/resources/thumbnails/036/324/708/small/ai-generated-picture-of-a-tiger-walking-in-the-forest-photo.jpg"
-                          )
-                        }
-                        key={ind}
-                        className="w-full h-[90px] overflow-hidden rounded-md cursor-pointer transform transition-all duration-300 border border-gray-800 hover:border-purple-500/30"
-                      >
-                        <img
-                          className="h-full w-full object-fill hover:opacity-90 transition-opacity"
-                          src="https://static.vecteezy.com/system/resources/thumbnails/036/324/708/small/ai-generated-picture-of-a-tiger-walking-in-the-forest-photo.jpg"
-                          alt="image"
-                        />
-                      </div>
-                    )
-                  )}
-                </div>
+              <div className="h-[80vh] overflow-x-auto flex justify-start items-start custom-scrollbar">
+                <BackgroundImages type="background" setImage={setImage} />
               </div>
             )}
           </div>
@@ -630,24 +613,25 @@ const Main = () => {
                     </div>
                   </div>
 
-                  {currentComponent.name === "main-frame" && image && (
-                    <div className="bg-gray-800/50 p-3 rounded-md border-gray-700/50">
-                      <h4 className="font-medium text-purple-300 mb-2">
-                        Actions
-                      </h4>
-                      <div className="grid grid-cols-1 gap-2">
-                        {/* <button className="bg-purple-600 hover:bg-purple-700 text-white py-1 px-3 rounded text-sm transition duration-200 hover:shadow-md hover:shadow-purple-700/30">
+                  {currentComponent.name === "main-frame" &&
+                    currentComponent.image && (
+                      <div className="bg-gray-800/50 p-3 rounded-md border-gray-700/50">
+                        <h4 className="font-medium text-purple-300 mb-2">
+                          Actions
+                        </h4>
+                        <div className="grid grid-cols-1 gap-2">
+                          {/* <button className="bg-purple-600 hover:bg-purple-700 text-white py-1 px-3 rounded text-sm transition duration-200 hover:shadow-md hover:shadow-purple-700/30">
                         Edit
                       </button> */}
-                        <button
-                          onClick={removeBackground}
-                          className="bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded text-sm transition duration-200 hover:shadow-md hover:shadow-red-700/30"
-                        >
-                          Remove Background
-                        </button>
+                          <button
+                            onClick={removeBackground}
+                            className="bg-red-600 hover:bg-red-700 text-white py-1 px-3 rounded text-sm transition duration-200 hover:shadow-md hover:shadow-red-700/30"
+                          >
+                            Remove Background
+                          </button>
+                        </div>
                       </div>
-                    </div>
-                  )}
+                    )}
 
                   {currentComponent.name !== "main-frame" && (
                     <div className="space-y-4">

@@ -1,7 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import HomeItems from "./Home/HomeItems";
+import api from "../utils/api";
+import toast from "react-hot-toast";
 
 const Home = () => {
+  const [designImages, setDesignImages] = useState([]);
+
   const navigate = useNavigate();
   const [show, setShow] = useState(false);
 
@@ -28,13 +33,47 @@ const Home = () => {
     });
   };
 
+  const getUserDesign = async () => {
+    try {
+      const { data } = await api.get("/api/user_design");
+      setDesignImages(data.designs);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    getUserDesign();
+  }, []);
+
+  const deleteDesign = async (design_id) => {
+    try {
+      const { data } = await api.delete(`/api/delete_user_image/${design_id}`);
+      toast.success("Design deleted successfully.");
+      getUserDesign();
+    } catch (error) {
+      console.log(error);
+      toast.error("Error deleting design. Please try again.");
+    }
+  };
+
+  const create = (e) => {
+    e.preventDefault();
+    navigate("/design/create", {
+      state: {
+        type: "create",
+        width: 600,
+        height: 450,
+      },
+    });
+  };
+
   return (
     <div className="border border-gray-700 rounded-lg p-3 sm:p-5 bg-[#3a464a] text-white shadow-lg">
       {/* Hero Banner Section */}
       <div className="w-full flex justify-center items-center h-[200px] sm:h-[250px] md:h-[280px] lg:h-[350px] bg-gradient-to-r from-[#4c76cf] to-[#552ab8] relative rounded-lg overflow-hidden shadow-xl mb-6 sm:mb-8">
         <button
           onClick={() => setShow(!show)}
-          className="px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm overflow-hidden text-center bg-[#8b3dffad] text-white rounded-md font-medium hover:bg-[#8b3dffd3] transition-all duration-300 absolute top-3 right-3 sm:top-4 sm:right-4 flex items-center gap-2 backdrop-blur-sm"
+          className="cursor-pointer px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm overflow-hidden text-center bg-[#8b3dffad] text-white rounded-md font-medium hover:bg-[#8b3dffd3] transition-all duration-300 absolute top-3 right-3 sm:top-4 sm:right-4 flex items-center gap-2 backdrop-blur-sm"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -101,7 +140,7 @@ const Home = () => {
               />
             </div>
           </div>
-          <button className="w-full px-3 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm overflow-hidden text-center bg-gradient-to-r from-purple-600 to-blue-500 text-white rounded-md font-medium hover:from-purple-700 hover:to-blue-600 transition-all duration-300 shadow-md">
+          <button className="cursor-pointer w-full px-3 py-2 sm:px-4 sm:py-3 text-xs sm:text-sm overflow-hidden text-center bg-gradient-to-r from-purple-600 to-blue-500 text-white rounded-md font-medium hover:from-purple-700 hover:to-blue-600 transition-all duration-300 shadow-md">
             Create Design
           </button>
         </form>
@@ -117,7 +156,10 @@ const Home = () => {
           <p className="text-sm sm:text-base md:text-lg text-gray-100 max-w-md mx-auto mb-4 sm:mb-6 hidden sm:block">
             Unleash your creativity with powerful design tools
           </p>
-          <button className="bg-white text-purple-700 hover:bg-gray-100 px-4 py-2 sm:px-6 sm:py-3 rounded-full text-sm sm:text-base font-medium shadow-lg transform transition-all hover:-translate-y-1 hover:shadow-xl">
+          <button
+            onClick={create}
+            className="cursor-pointer bg-white text-purple-700 hover:bg-gray-100 px-4 py-2 sm:px-6 sm:py-3 rounded-full text-sm sm:text-base font-medium shadow-lg transform transition-all hover:-translate-y-1 hover:shadow-xl"
+          >
             Start Creating
           </button>
         </div>
@@ -129,7 +171,10 @@ const Home = () => {
           <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-white">
             Your recent designs
           </h2>
-          <button className="text-xs sm:text-sm text-purple-300 hover:text-purple-200 flex items-center gap-1">
+          <button
+            onClick={() => navigate("/projects")}
+            className=" cursor-pointer text-xs sm:text-sm text-purple-300 hover:text-purple-200 flex items-center gap-1"
+          >
             View all
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -150,95 +195,11 @@ const Home = () => {
 
         {/* Design Cards Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
-          {/* Empty State */}
-          {Array(4)
-            .fill()
-            .map((_, index) => (
-              <div
-                key={index}
-                className="bg-[#2d3639] border border-gray-700 rounded-lg overflow-hidden group hover:border-purple-500 transition-all duration-300 hover:shadow-md hover:shadow-purple-900/20 relative"
-              >
-                <div className="h-24 sm:h-32 bg-gradient-to-br from-gray-700 to-gray-800 relative overflow-hidden">
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <span className="text-gray-500 text-xs sm:text-sm">
-                      {index === 0 ? "Start a new design" : "No preview"}
-                    </span>
-                  </div>
-                  <div className="absolute inset-0 bg-purple-600 opacity-0 group-hover:opacity-20 transition-opacity duration-300"></div>
-
-                  {/* Delete Icon - appears on hover */}
-                  {index !== 0 && (
-                    <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <button
-                        className="h-6 w-6 bg-black/70 hover:bg-red-600/90 rounded-full flex items-center justify-center text-white shadow-md transform hover:scale-110 transition-all"
-                        aria-label="Delete design"
-                      >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          className="h-4 w-4"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M6 18L18 6M6 6l12 12"
-                          />
-                        </svg>
-                      </button>
-                    </div>
-                  )}
-                </div>
-                <div className="p-2 sm:p-3">
-                  <p className="text-xs sm:text-sm text-gray-300 truncate">
-                    {index === 0 ? "Create new" : `Untitled Design ${index}`}
-                  </p>
-                  <p className="text-xs text-gray-500 mt-1 hidden sm:block">
-                    {index === 0
-                      ? "Template"
-                      : `Modified ${index} day${index > 1 ? "s" : ""} ago`}
-                  </p>
-                </div>
-              </div>
-            ))}
-        </div>
-      </div>
-
-      {/* Templates Section */}
-      {/* <div className="mt-8 sm:mt-12">
-        <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-4 sm:mb-6">
-          Recommended templates
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
-          {["Social Media", "Presentation", "Print"].map((type, index) => (
-            <div
-              key={index}
-              className="bg-gradient-to-br from-[#2d3639] to-[#252a2d] rounded-lg overflow-hidden border border-gray-700 hover:border-purple-500 transition-all duration-300 shadow-md"
-            >
-              <div className="h-32 sm:h-40 md:h-48 bg-gradient-to-br from-purple-800/20 to-blue-800/20 relative">
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <span className="text-2xl sm:text-3xl md:text-4xl text-gray-600 opacity-30">
-                    {type.charAt(0)}
-                  </span>
-                </div>
-              </div>
-              <div className="p-3 sm:p-4">
-                <h3 className="text-base sm:text-lg font-semibold text-white">
-                  {type}
-                </h3>
-                <p className="text-xs sm:text-sm text-gray-400 mt-1">
-                  Professional {type.toLowerCase()} templates
-                </p>
-                <button className="mt-2 sm:mt-3 w-full bg-[#464e52] hover:bg-[#525a5e] text-white py-1.5 sm:py-2 rounded-md transition-colors duration-200 text-xs sm:text-sm">
-                  Explore
-                </button>
-              </div>
-            </div>
+          {designImages.slice(0, 4).map((design, ind) => (
+            <HomeItems design={design} key={ind} deleteDesign={deleteDesign} />
           ))}
         </div>
-      </div> */}
+      </div>
     </div>
   );
 };
