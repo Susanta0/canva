@@ -9,5 +9,26 @@ router.put(
   auth,
   designController.updateUserDesign
 );
+router.post("/add_user_image", auth, designController.addUserImage);
+router.get("/get_user_image", auth, designController.getUserImage);
+
+router.get("/design_images", auth, designController.getDesignImages);
+router.get("/background_images", auth, designController.getBackgroundImages);
+
+router.get("/user_design", auth, designController.getUserDesigns);
+
+router.delete(
+  "/delete_user_image/:design_id",
+  auth,
+  designController.deleteUserDesigns
+);
+
+router.get("/templates", auth, designController.getTempaltes);
+
+router.get(
+  "/add_user_templates/:template_id",
+  auth,
+  designController.addUserTemplate
+);
 
 module.exports = router;

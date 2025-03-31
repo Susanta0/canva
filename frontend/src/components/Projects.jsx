@@ -1,22 +1,50 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import api from "../utils/api";
+import HomeItems from "./Home/HomeItems";
+import toast from "react-hot-toast";
 
-const Projects = () => {
+const Projects = ({ type, design_id }) => {
+  const [designImages, setDesignImages] = useState([]);
+
+  const getUserDesign = async () => {
+    try {
+      const { data } = await api.get("/api/user_design");
+      setDesignImages(data.designs);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    getUserDesign();
+  }, []);
+
+  const deleteDesign = async (design_id) => {
+    try {
+      const { data } = await api.delete(`/api/delete_user_image/${design_id}`);
+      toast.success("Design deleted successfully.");
+      getUserDesign();
+    } catch (error) {
+      console.log(error);
+      toast.error("Error deleting design. Please try again.");
+    }
+  };
+
   return (
-    <div className="h-[88vh] overflow-x-auto flex justify-start items-start custom-scrollbar">
-      <div className="grid grid-cols-2 gap-2">
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15].map((img, ind) => (
-          <Link
-            key={ind}
-            className="w-full h-[90px] overflow-hidden rounded-sm cursor-pointer"
-          >
-            <img
-              className="h-full w-full object-fill"
-              src="https://static.vecteezy.com/system/resources/thumbnails/036/324/708/small/ai-generated-picture-of-a-tiger-walking-in-the-forest-photo.jpg"
-              alt="image"
-            />
-          </Link>
-        ))}
+    <div className="h-[80vh] overflow-x-auto flex justify-start items-start custom-scrollbar">
+      <div
+        className={`grid gap-2 w-full ${type ? "grid-cols-1" : "grid-cols-4"}`}
+      >
+        {designImages.map(
+          (img, ind) =>
+            img._id !== design_id && (
+              <HomeItems
+                design={img}
+                key={ind}
+                type={type}
+                deleteDesign={deleteDesign}
+              />
+            )
+        )}
       </div>
     </div>
   );
