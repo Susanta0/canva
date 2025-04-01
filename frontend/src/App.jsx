@@ -46,7 +46,7 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <GoogleOAuthProvider clientId="705978826928-ht948kftpb2qlb0325po6kdekfo1c3b7.apps.googleusercontent.com">
+    <GoogleOAuthProvider clientId="705978826928-t35sgjiqlrmhv0v6faog2rr8p0morgto.apps.googleusercontent.com">
       <RouterProvider router={router} />
     </GoogleOAuthProvider>
   );
