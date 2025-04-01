@@ -230,9 +230,30 @@ const Index = () => {
               <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                 <div className="sm:flex sm:items-start">
                   <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
-                    <h3 className="text-lg leading-6 font-medium text-gray-900 mb-6">
-                      Create your account
-                    </h3>
+                    <div className="flex justify-between items-center mb-6">
+                      <h3 className="text-lg leading-6 font-medium text-gray-900">
+                        Create your account
+                      </h3>
+                      <button
+                        onClick={() => setShowSignupModal(false)}
+                        className="text-gray-400 hover:text-gray-500 focus:outline-none"
+                      >
+                        <svg
+                          className="h-6 w-6"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M6 18L18 6M6 6l12 12"
+                          />
+                        </svg>
+                      </button>
+                    </div>
                     <div className="mt-2 space-y-4">
                       <div>
                         <label
@@ -368,15 +389,6 @@ const Index = () => {
                   </div>
                 </div>
               </div>
-              <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                <button
-                  type="button"
-                  className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
-                  onClick={() => setShowSignupModal(false)}
-                >
-                  Cancel
-                </button>
-              </div>
             </div>
           </div>
         </div>
@@ -396,9 +408,30 @@ const Index = () => {
               <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                 <div className="sm:flex sm:items-start">
                   <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
-                    <h3 className="text-lg leading-6 font-medium text-gray-900 mb-6">
-                      Sign in to your account
-                    </h3>
+                    <div className="flex justify-between items-center mb-6">
+                      <h3 className="text-lg leading-6 font-medium text-gray-900">
+                        Sign in to your account
+                      </h3>
+                      <button
+                        onClick={() => setShowSigninModal(false)}
+                        className="text-gray-400 hover:text-gray-500 focus:outline-none"
+                      >
+                        <svg
+                          className="h-6 w-6"
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M6 18L18 6M6 6l12 12"
+                          />
+                        </svg>
+                      </button>
+                    </div>
                     <div className="mt-2 space-y-4">
                       <div>
                         <label
@@ -489,7 +522,7 @@ const Index = () => {
                       <div className="mt-6">
                         <button
                           type="button"
-                          className=" cursor-pointer w-full inline-flex justify-center items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+                          className="cursor-pointer w-full inline-flex justify-center items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
                         >
                           <svg
                             className="h-5 w-5 mr-2"
@@ -525,7 +558,7 @@ const Index = () => {
                       <p className="text-gray-600">
                         Don't have an account?{" "}
                         <button
-                          className=" cursor-pointerfont-medium text-purple-600 hover:text-purple-500 focus:outline-none"
+                          className="cursor-pointer font-medium text-purple-600 hover:text-purple-500 focus:outline-none"
                           onClick={() => {
                             setShowSigninModal(false);
                             setShowSignupModal(true);
@@ -537,15 +570,6 @@ const Index = () => {
                     </div>
                   </div>
                 </div>
-              </div>
-              <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
-                <button
-                  type="button"
-                  className="mt-3 w-full inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
-                  onClick={() => setShowSigninModal(false)}
-                >
-                  Cancel
-                </button>
               </div>
             </div>
           </div>
