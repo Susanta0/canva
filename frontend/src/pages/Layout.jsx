@@ -17,6 +17,8 @@ const Layout = () => {
 
   const userInfo = token_decode(localStorage.getItem("canva_token"));
 
+  console.log(userInfo);
+
   // Handle screen resize and set mobile state
   useEffect(() => {
     const handleResize = () => {
