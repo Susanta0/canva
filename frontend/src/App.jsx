@@ -11,6 +11,7 @@ import Templates from "./components/Templates";
 import CreateDesign from "./pages/CreateDesign";
 import Main from "./pages/Main";
 import { token_decode } from "./utils";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 const userInfo = token_decode(localStorage.getItem("canva_token"));
 
@@ -44,7 +45,11 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  return <RouterProvider router={router} />;
+  return (
+    <GoogleOAuthProvider clientId="705978826928-ht948kftpb2qlb0325po6kdekfo1c3b7.apps.googleusercontent.com">
+      <RouterProvider router={router} />
+    </GoogleOAuthProvider>
+  );
 }
 
 export default App;

@@ -2,6 +2,7 @@ import { useState } from "react";
 import "/src/index.css"; // Import the CSS file
 import api from "../utils/api";
 import toast from "react-hot-toast";
+import { useGoogleLogin } from "@react-oauth/google";
 
 const Index = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -63,6 +64,31 @@ const Index = () => {
       console.error(error);
     }
   };
+
+  const responseGoogle = async (authResult) => {
+    try {
+      if (authResult["code"]) {
+        const { data } = await api.get(
+          `/api/google_login?code=${authResult.code}`
+        );
+        localStorage.setItem("canva_token", data.token);
+        window.location.href = "/";
+        toast.success("Google login successful");
+      }
+    } catch (error) {
+      console.error(
+        "Error in responseGoogle:",
+        error.response?.data || error.message
+      );
+      toast.error(error.response?.data?.message || "Google login failed");
+    }
+  };
+
+  const googleLogin = useGoogleLogin({
+    onSuccess: responseGoogle,
+    onError: responseGoogle,
+    flow: "auth-code",
+  });
 
   return (
     <>
@@ -339,6 +365,7 @@ const Index = () => {
                       </div>
                       <div className="mt-6">
                         <button
+                          onClick={googleLogin}
                           type="button"
                           className="w-full inline-flex justify-center items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
                         >
@@ -521,6 +548,7 @@ const Index = () => {
                       </div>
                       <div className="mt-6">
                         <button
+                          onClick={googleLogin}
                           type="button"
                           className="cursor-pointer w-full inline-flex justify-center items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
                         >
