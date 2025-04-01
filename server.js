@@ -18,6 +18,7 @@ if (process.env.NODE_ENV === "local") {
 } else {
   app.use(
     cors({
+      origin: "https://canva-buht.onrender.com",
       credentials: true,
     })
   );
