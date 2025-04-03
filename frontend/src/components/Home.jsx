@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 
 const Home = () => {
   const [designImages, setDesignImages] = useState([]);
+  const [loading, setLoading] = useState(true); // Add loading state
 
   const navigate = useNavigate();
   const [show, setShow] = useState(false);
@@ -35,10 +36,13 @@ const Home = () => {
 
   const getUserDesign = async () => {
     try {
+      setLoading(true); // Set loading to true before fetching
       const { data } = await api.get("/api/user_design");
       setDesignImages(data.designs);
     } catch (error) {
       console.log(error);
+    } finally {
+      setLoading(false); // Set loading to false after fetching
     }
   };
   useEffect(() => {
@@ -193,12 +197,33 @@ const Home = () => {
           </button>
         </div>
 
-        {/* Design Cards Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
-          {designImages.slice(0, 4).map((design, ind) => (
-            <HomeItems design={design} key={ind} deleteDesign={deleteDesign} />
-          ))}
-        </div>
+        {/* Show spinner or skeleton while loading */}
+        {loading ? (
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
+            {Array(4)
+              .fill(0)
+              .map((_, index) => (
+                <div
+                  key={index}
+                  className="animate-pulse bg-gray-700 rounded-lg h-40 sm:h-48"
+                ></div>
+              ))}
+          </div>
+        ) : designImages.length === 0 ? (
+          <div className="flex justify-center items-center h-40 sm:h-48 bg-gray-800 rounded-lg text-gray-400 text-sm sm:text-base font-semibold">
+            No designs found.
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
+            {designImages.map((design, ind) => (
+              <HomeItems
+                design={design}
+                key={ind}
+                deleteDesign={deleteDesign}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

@@ -7,6 +7,7 @@ import { HiMenuAlt2 } from "react-icons/hi";
 import { IoClose } from "react-icons/io5";
 import { token_decode } from "../utils/index";
 import default_user from "/default_user.png";
+import DesignTips from "../components/DesignTips";
 
 const Layout = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -16,8 +17,6 @@ const Layout = () => {
   const navigate = useNavigate();
 
   const userInfo = token_decode(localStorage.getItem("canva_token"));
-
-  console.log(userInfo);
 
   // Handle screen resize and set mobile state
   useEffect(() => {
@@ -53,6 +52,8 @@ const Layout = () => {
     };
   }, [isMenuOpen]);
 
+  // No longer need the tip rotation and localStorage effects since we're using the DesignTips component
+
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
@@ -82,6 +83,8 @@ const Layout = () => {
     localStorage.removeItem("canva_token");
     window.location.href = "/";
   };
+
+  // Design tips functionality is now handled by the DesignTips component
 
   return (
     <div className="min-h-screen w-full bg-gradient-to-b from-[#343E42] to-[#282f32] text-white">
@@ -306,35 +309,8 @@ const Layout = () => {
             </li>
           </ul>
 
-          {/* Bottom Section with Tips */}
-          <div className="mt-6 sm:mt-8 bg-[#343E42] p-3 sm:p-4 rounded-lg border border-gray-700">
-            <h3 className="font-medium text-white text-sm sm:text-base mb-1 sm:mb-2">
-              Quick Tips
-            </h3>
-            <p className="text-xs sm:text-sm text-gray-300 mb-2 sm:mb-3">
-              Create stunning designs with drag-and-drop simplicity.
-            </p>
-            <a
-              href="#"
-              className="text-xs sm:text-sm text-purple-400 hover:text-purple-300 flex items-center"
-            >
-              Learn more
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-3 w-3 sm:h-4 sm:w-4 ml-1"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
-            </a>
-          </div>
+          {/* Enhanced Design Tips Section */}
+          {/* <DesignTips /> */}
         </div>
 
         {/* Main Content Area */}
