@@ -13,6 +13,8 @@ import Main from "./pages/Main";
 import { token_decode } from "./utils";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 
+const AapiKey = import.meta.env.VITE_API_KEY;
+
 const userInfo = token_decode(localStorage.getItem("canva_token"));
 
 const router = createBrowserRouter([
@@ -46,7 +48,7 @@ const router = createBrowserRouter([
 
 function App() {
   return (
-    <GoogleOAuthProvider clientId={import.meta.env.VITE_API_KEY}>
+    <GoogleOAuthProvider clientId={AapiKey}>
       <RouterProvider router={router} />
     </GoogleOAuthProvider>
   );
