@@ -26,6 +26,8 @@ if (process.env.NODE_ENV === "local") {
 
 app.use("/api", require("./src/routes/authRoutes"));
 app.use("/api", require("./src/routes/designRoutes"));
+app.use("/api", require("./src/routes/openaiRoutes"));
+app.use("/api", require("./src/routes/designTipRoutes"));
 
 if (process.env.NODE_ENV === "production") {
   app.use(express.static(path.join(__dirname, "./frontend/dist")));
