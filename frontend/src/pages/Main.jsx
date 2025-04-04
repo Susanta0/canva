@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import Header from "../components/Header";
 import { BsFillImageFill, BsFolder, BsGrid1X2 } from "react-icons/bs";
 import { RxTransparencyGrid } from "react-icons/rx";
-import { FaCloudUploadAlt, FaShapes } from "react-icons/fa";
+import { FaCloudUploadAlt, FaShapes, FaRobot } from "react-icons/fa";
 import { TfiText } from "react-icons/tfi";
 import { MdKeyboardArrowLeft } from "react-icons/md";
 import { HiChevronDoubleLeft, HiChevronDoubleRight } from "react-icons/hi";
@@ -16,6 +16,7 @@ import { MdFormatColorText } from "react-icons/md";
 import api from "../utils/api";
 import InitialImages from "../components/InitialImages";
 import BackgroundImages from "../components/BackgroundImages";
+import AiImageGenerator from "../components/AiImageGenerator";
 
 const Main = () => {
   const { design_id } = useParams();
@@ -338,6 +339,7 @@ const Main = () => {
     { id: "projects", icon: <BsFolder />, label: "Project" },
     { id: "image", icon: <BsFillImageFill />, label: "Images" },
     { id: "background", icon: <RxTransparencyGrid />, label: "Background" },
+    { id: "ai_image", icon: <FaRobot />, label: "AI Image" },
   ];
 
   useEffect(() => {
@@ -546,6 +548,13 @@ const Main = () => {
             {activeTab === "background" && (
               <div className="h-[80vh] overflow-x-auto flex justify-start items-start custom-scrollbar">
                 <BackgroundImages type="background" setImage={setImage} />
+              </div>
+            )}
+
+            {/* AI Image Generator content */}
+            {activeTab === "ai_image" && (
+              <div>
+                <AiImageGenerator add_image={addImage} />
               </div>
             )}
           </div>

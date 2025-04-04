@@ -7,7 +7,6 @@ import { HiMenuAlt2 } from "react-icons/hi";
 import { IoClose } from "react-icons/io5";
 import { token_decode } from "../utils/index";
 import default_user from "/default_user.png";
-import DesignTips from "../components/DesignTips";
 
 const Layout = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -308,9 +307,6 @@ const Layout = () => {
               </Link>
             </li>
           </ul>
-
-          {/* Enhanced Design Tips Section */}
-          {/* <DesignTips /> */}
         </div>
 
         {/* Main Content Area */}
