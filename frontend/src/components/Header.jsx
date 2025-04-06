@@ -34,14 +34,10 @@ const Header = ({ components, design_id }) => {
     const image = await htmlToImage.toBlob(getDiv);
 
     if (image) {
-      const obj = {
-        design: components,
-      };
-      
       try {
-      const formData = new FormData();
-      formData.append("design", JSON.stringify(obj));
-      formData.append("image", image);
+        const formData = new FormData();
+        formData.append("design", JSON.stringify({ design: components }));
+        formData.append("image", image);
         setLoader(true);
         const { data } = await api.put(
           `/api/update_user_design/${design_id}`,
