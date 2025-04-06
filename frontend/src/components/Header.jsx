@@ -37,10 +37,11 @@ const Header = ({ components, design_id }) => {
       const obj = {
         design: components,
       };
+      
+      try {
       const formData = new FormData();
       formData.append("design", JSON.stringify(obj));
       formData.append("image", image);
-      try {
         setLoader(true);
         const { data } = await api.put(
           `/api/update_user_design/${design_id}`,
