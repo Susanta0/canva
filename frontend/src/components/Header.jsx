@@ -41,12 +41,18 @@ const Header = ({ components, design_id }) => {
         setLoader(true);
         const { data } = await api.put(
           `/api/update_user_design/${design_id}`,
-          formData
+          formData,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          }
         );
         toast.success("Image saved successfully!");
 
         setLoader(false);
       } catch (error) {
+        console.error("Error saving image:", error);
         setLoader(false);
         toast.error("Error saving image. Please try again.");
       }

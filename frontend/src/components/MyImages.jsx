@@ -15,11 +15,17 @@ const MyImages = ({ add_image }) => {
 
       try {
         setLoader(true);
-        const { data } = await api.post("/api/add_user_image", formData);
+        const { data } = await api.post("/api/add_user_image", formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
         setImages([...images, data.userAddImage]);
+        toast.success("Image uploaded successfully!");
         setLoader(false);
       } catch (error) {
         setLoader(false);
+        console.error("Error uploading image:", error);
         toast.error("Error uploading image. Please try again.");
       }
     }

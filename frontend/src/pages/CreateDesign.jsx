@@ -33,13 +33,18 @@ const CreateDesign = () => {
       formData.append("image", image);
       try {
         setLoader(true);
-        const { data } = await api.post("/api/create_user_design", formData);
+        const { data } = await api.post("/api/create_user_design", formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
         navigate(`/design/${data.design._id}/edit`);
 
         setLoader(false);
       } catch (error) {
         setLoader(false);
-        console.log(error.response.data);
+        console.error("Error creating design:", error);
+        toast.error("Error creating design. Please try again.");
       }
     }
   };
